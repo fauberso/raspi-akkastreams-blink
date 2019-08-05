@@ -22,6 +22,12 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
+			<groupId>com.pi4j</groupId>
+			<artifactId>pi4j-native</artifactId>
+			<version>1.2</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
 			<groupId>com.typesafe.akka</groupId>
 			<artifactId>akka-testkit_2.12</artifactId>
 			<version>${akka.version}</version>

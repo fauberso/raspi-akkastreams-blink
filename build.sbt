@@ -15,12 +15,15 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
   "com.pi4j" % "pi4j-core" % "1.2",
+  "com.pi4j" % "pi4j-native" % "1.2",
   "junit" % "junit" % "4.12") 
   
   
 val zipFileName = packageBin in Universal
   
-lazy val riot = project.in(file(".")).enablePlugins(JavaServerAppPackaging, UniversalPlugin, DeploySSH).settings(
+val deploy = taskKey[String]("Deploy project to Rapberry Pi")
+  
+lazy val riot = project.in(file(".")).enablePlugins(JavaAppPackaging, DeploySSH).settings(
  version := "1.1",
  deployConfigs ++= Seq(
   ServerConfig("raspi", "169.254.18.72", Some("pi"), Some("raspberry"))
@@ -35,10 +38,12 @@ lazy val riot = project.in(file(".")).enablePlugins(JavaServerAppPackaging, Univ
  ),
     deploySshExecAfter ++= Seq(
         (ssh: SSH) => {
+            ssh.execute(s"rm -rf /usr/share/${name.value}_${version.value}")
             ssh.execute(s"sudo mv /tmp/${name.value}_${version.value} /usr/share")
             ssh.execute(s"chmod +x /usr/share/${name.value}_${version.value}/bin/${name.value}")
             ssh.execute(s"screen -DmS ${name.value} /usr/share/${name.value}_${version.value}/bin/${name.value}")
             ssh.execute(s"echo $$! > /var/run/${name.value}.pid")
         }
-    )
+    ),
+   deploySshServersNames ++= Seq("raspi")
 )
