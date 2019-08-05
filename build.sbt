@@ -14,6 +14,7 @@ lazy val akkaVersion = "2.6.0-M5"
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
+  "com.pi4j" % "pi4j-parent" % "1.2",
   "junit" % "junit" % "4.12") 
   
   
