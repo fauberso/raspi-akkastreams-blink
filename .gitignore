@@ -9,6 +9,11 @@
 .settings
 .project
 
+# VS.Code configuration
+.bloop
+.metals
+.scalafmt.conf
+
 # Package Files #
 *.jar
 *.war
