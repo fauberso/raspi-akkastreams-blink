@@ -1,2 +1,8 @@
 # raspi-akkatyped-blink
-The simplest possible "blink" example on a Raspberry Pi using Akka Typed and SBT deployment
+The simplest possible "blink" example on a Raspberry Pi using Akka-Typed and SBT deployment
+
+To deploy, execute `sbt deploy` in the project's root directory.
+
+Open issues:
+- There's currently no way to auto-detect the Raspberry PI's IP address. For now, it must be manually edited in build.sbt in case your device cannot be found under the name 'raspberrypi.local'.
+- When the Raspberry Pi reboots, the application isn't restarted.
