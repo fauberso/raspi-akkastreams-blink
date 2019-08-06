@@ -22,7 +22,7 @@ public class RaspberryPi {
 			GpioPinDigitalOutput output = gpioMap.get(pin);
 			if (output == null) {
 				output = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, pin.getName(),
-						msg.equals(GPIOState.ON) ? PinState.HIGH : PinState.LOW);
+						msg.equals(GPIOState.OFF) ? PinState.LOW : PinState.HIGH);
 				gpioMap.put(pin, output);
 			} else {
 				switch (msg) {
@@ -36,6 +36,8 @@ public class RaspberryPi {
 					output.toggle();
 					break;
 				}
+
+				System.out.println(output.getName() + " is now " + output.getState());
 			}
 			return Behaviors.same();
 		});
