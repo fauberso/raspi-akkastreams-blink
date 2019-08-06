@@ -22,7 +22,8 @@ public class RaspberryPi {
 		return Behaviors.receive((ctx, msg) -> {
 			GpioPinDigitalOutput output = gpioMap.get(pin);
 			if (output == null) {
-				output = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, pin.getName(),
+				System.out.println("Initializing " + pin.getName());
+				output = gpio.provisionDigitalOutputPin(pin, pin.getName(),
 						msg.equals(GPIOState.OFF) ? PinState.LOW : PinState.HIGH);
 				output.setShutdownOptions(true, PinState.LOW);
 				output.setPullResistance(PinPullResistance.OFF);

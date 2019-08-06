@@ -17,8 +17,8 @@ public class BlinkExample {
 	public static void main(String[] args) throws InterruptedException {
 		dumpInfo();
 		System.out.println();
-		
-		Pin pin = RaspiPin.GPIO_25;
+
+		Pin pin = RaspiPin.GPIO_07;
 
 		Behavior<GPIOState> timedTrigger = Behaviors.withTimers(timers -> {
 			timers.startTimerAtFixedRate("LedTimer", GPIOState.TOGGLE, Duration.ofMillis(500));
