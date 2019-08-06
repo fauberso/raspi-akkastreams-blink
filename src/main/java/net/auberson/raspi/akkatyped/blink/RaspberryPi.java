@@ -7,6 +7,7 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
@@ -23,6 +24,8 @@ public class RaspberryPi {
 			if (output == null) {
 				output = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, pin.getName(),
 						msg.equals(GPIOState.OFF) ? PinState.LOW : PinState.HIGH);
+				output.setShutdownOptions(true, PinState.LOW);
+				output.setPullResistance(PinPullResistance.OFF);
 				gpioMap.put(pin, output);
 			} else {
 				switch (msg) {
