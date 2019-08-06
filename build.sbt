@@ -34,9 +34,12 @@ lazy val riot = project.in(file(".")).enablePlugins(JavaAppPackaging, DeploySSH)
     deploySshExecAfter ++= Seq(
         (ssh: SSH) => {
             val log = sLog.value
+            
             ssh.execute(s"sudo rm -rf /usr/share/${name.value}_${version.value}")
             ssh.execute(s"sudo mv /tmp/${name.value}_${version.value} /usr/share")
             ssh.execute(s"chmod +x /usr/share/${name.value}_${version.value}/bin/${name.value}")
+            log.info(s"Application installed under /usr/share/${name.value}_${version.value}")
+            
             ssh.execute(s"screen -dmS ${name.value} /usr/share/${name.value}_${version.value}/bin/${name.value}")
             log.info(s"Process started in screen. Reattach to screen with 'screen -r ${name.value}', then leave with 'ctrl-A d'.")
         }
