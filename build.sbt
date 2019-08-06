@@ -18,11 +18,6 @@ libraryDependencies ++= Seq(
   "com.pi4j" % "pi4j-native" % "1.2",
   "junit" % "junit" % "4.12") 
   
-  
-val zipFileName = packageBin in Universal
-  
-val deploy = taskKey[String]("Deploy project to Rapberry Pi")
-  
 lazy val riot = project.in(file(".")).enablePlugins(JavaAppPackaging, DeploySSH).settings(
  version := "1.1",
  deployConfigs ++= Seq(
@@ -30,7 +25,7 @@ lazy val riot = project.in(file(".")).enablePlugins(JavaAppPackaging, DeploySSH)
  ),
     deploySshExecBefore ++= Seq(
         (ssh: SSH) => {
-           ssh.execute(s"test -f /var/run/${name.value}.pid && pkill -F /var/run/${name.value}.pid && rm /var/run/${name.value}.pid")
+           ssh.execute(s"screen -XS raspi-akkatyped-blink quit")
         }
     ),
  deployArtifacts ++= Seq(
@@ -38,11 +33,12 @@ lazy val riot = project.in(file(".")).enablePlugins(JavaAppPackaging, DeploySSH)
  ),
     deploySshExecAfter ++= Seq(
         (ssh: SSH) => {
-            ssh.execute(s"rm -rf /usr/share/${name.value}_${version.value}")
+            val log = sLog.value
+            ssh.execute(s"sudo rm -rf /usr/share/${name.value}_${version.value}")
             ssh.execute(s"sudo mv /tmp/${name.value}_${version.value} /usr/share")
             ssh.execute(s"chmod +x /usr/share/${name.value}_${version.value}/bin/${name.value}")
-            ssh.execute(s"screen -DmS ${name.value} /usr/share/${name.value}_${version.value}/bin/${name.value}")
-            ssh.execute(s"echo $$! > /var/run/${name.value}.pid")
+            ssh.execute(s"screen -dmS ${name.value} /usr/share/${name.value}_${version.value}/bin/${name.value}")
+            log.info(s"Process started in screen. Reattach to screen with 'screen -r ${name.value}', then leave with 'ctrl-A d'.")
         }
     ),
    deploySshServersNames ++= Seq("raspi")
