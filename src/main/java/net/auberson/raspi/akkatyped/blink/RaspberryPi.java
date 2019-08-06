@@ -9,11 +9,15 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
 
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.Behaviors;
 
+/**
+ * Reactive implementation of the GPIO outputs on a Raspberry Pi: Akka-Typed
+ * 'Behaviour' objects can be generated for any GPIO pin. They will react to
+ * 'GPIOState' messages, and set the GPIO accordingly.
+ */
 public class RaspberryPi {
 	private static final GpioController gpio = GpioFactory.getInstance();
 	private static final Map<Pin, GpioPinDigitalOutput> gpioMap = new HashMap<Pin, GpioPinDigitalOutput>();
