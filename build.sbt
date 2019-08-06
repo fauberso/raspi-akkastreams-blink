@@ -46,3 +46,11 @@ lazy val riot = project.in(file(".")).enablePlugins(JavaAppPackaging, DeploySSH)
     ),
    deploySshServersNames ++= Seq("raspi")
 )
+
+  commands += Command.command("deploy") { state =>
+      "clean" ::
+      "compile" ::
+      "stage" ::
+      "deploySshTask" ::
+      state
+  }
