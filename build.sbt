@@ -25,7 +25,7 @@ lazy val riot = project
   .settings(
     version := "1.1",
     deployConfigs ++= Seq(
-      ServerConfig("raspi", "169.254.18.72", Some("pi"), Some("raspberry"))
+      ServerConfig("raspi", "raspberrypi.local", Some("pi"), Some("raspberry"))
     ),
     deploySshExecBefore ++= Seq(
       (ssh: SSH) => {
