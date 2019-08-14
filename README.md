@@ -1,5 +1,5 @@
-# raspi-akkatyped-blink
-The simplest possible "blink" example on a Raspberry Pi using Akka-Typed and SBT deployment
+# raspi-akkastreams-blink
+The simplest possible "blink" example on a Raspberry Pi using Akka Stream and SBT deployment
 
 To deploy, execute `sbt deploy` in the project's root directory.
 
