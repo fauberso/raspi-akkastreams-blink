@@ -2,35 +2,31 @@ package net.auberson.raspi.akkatyped.blink;
 
 import java.time.Duration;
 
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
-
-import akka.actor.typed.ActorSystem;
-import akka.actor.typed.Behavior;
-import akka.actor.typed.javadsl.Behaviors;
+import akka.actor.ActorSystem;
+import akka.stream.ActorMaterializer;
+import akka.stream.Materializer;
+import akka.stream.javadsl.Source;
 
 /**
- * Example code using Akka-Typed that blinks a LED on a Raspberry Pi (conect the
- * LED to GND/Pin 6 and GPIO07/Pin 7, with a resistor): A timer is started that
- * sends a 'Toggle' message every half second. A Raspberry Pi GPIO pin receives
- * this message, and toggles the GPIO.
+ * Example code using Akka Stream that blinks a LED on a Raspberry Pi (connect
+ * the LED to GND/Pin 6 and GPIO07/Pin 7, with a resistor): A timer is started
+ * that sends a 'Toggle' message every half second. A Raspberry Pi GPIO pin
+ * receives this message, and toggles the GPIO.
  */
 public class BlinkExample {
+	private static final int PIN = 7;
 
 	public static void main(String[] args) throws InterruptedException {
 		Util.dumpInfo();
 		System.out.println();
 
-		Pin pin = RaspiPin.GPIO_07;
+		ActorSystem system = ActorSystem.create("QuickStart");
+		Materializer materializer = ActorMaterializer.create(system);
 
-		Behavior<GPIOState> timedTrigger = Behaviors.withTimers(timers -> {
-			timers.startTimerAtFixedRate("LedTimer", GPIOState.TOGGLE, Duration.ofMillis(500));
-			return RaspberryPi.getGPIO(pin);
-		});
+		Source.tick(Duration.ZERO, Duration.ofMillis(500), GPIOState.TOGGLE)
+				.runWith(RaspberryPi.getGPIOSink(system, PIN, false), materializer);
 
-		System.out.println("Blinking led on " + pin.getName());
-
-		ActorSystem.create(timedTrigger, "ActorSystem");
+		System.out.println("Blinking led on Pin " + PIN);
 
 		Util.waitForever(BlinkExample.class);
 	}
