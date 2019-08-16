@@ -30,8 +30,17 @@ public class RaspberryPi {
 	}
 
 	private static final GpioController gpio = GpioFactory.getInstance();
+	private final ActorSystem system;
 
-	public static final Sink<GPIOState, NotUsed> getGPIOSink(ActorSystem system, int pin, boolean initialstate) {
+	private RaspberryPi(ActorSystem system) {
+		this.system = system;
+	}
+
+	public static final RaspberryPi create(ActorSystem system) {
+		return new RaspberryPi(system);
+	}
+
+	public final Sink<GPIOState, NotUsed> getGPIOSink(int pin, boolean initialstate) {
 		ActorRef actor = system.actorOf(Props.create(GPIOOutputActor.class), "GPIO-" + pin);
 		return Sink.actorRefWithAck(actor, new Initialize(RaspiPin.getPinByAddress(pin), initialstate), Ack.INSTANCE,
 				new Shutdown(), ex -> new RuntimeException(ex));
